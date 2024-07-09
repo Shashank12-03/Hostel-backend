@@ -1,0 +1,6 @@
+.env
+# Ignore migrations
+*/migrations/
+
+*.pyc
+__pycache__/
