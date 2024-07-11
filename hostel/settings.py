@@ -14,6 +14,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 from datetime import timedelta
 import os
+import dj_database_url
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +30,7 @@ SECRET_KEY = 'django-insecure-47^hz8-@_qm8k+87-)+ve(=(01c@7)*6io6pu5p^hhe)y2uad7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition

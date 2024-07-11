@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import Complaints,ComplaintType
-from registration.models import LeaveRecord,StudentProfile
+from .models import Complaints,ComplaintType,Notices
+from registration.models import LeaveRecord,StudentProfile,HostelProfile
 class RegisterComplaintSerializer(serializers.ModelSerializer):
     complaint_type = serializers.SlugRelatedField(slug_field="type",queryset = ComplaintType.objects.all())
     
@@ -39,4 +39,24 @@ class ComplaintsSerializer(serializers.ModelSerializer):
             'complainant',
             'description',
             'date'
+        ]
+        
+class NoticeSerializer(serializers.ModelSerializer):
+    hostel = serializers.SlugRelatedField(
+        slug_field="name", queryset=HostelProfile.objects.all()
+    )
+    
+    class Meta:
+        model = Notices
+        fields = [
+            'hostel',
+            'description'
+        ]
+
+class AddNoticeSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Notices
+        fields = [
+            'description'
         ]

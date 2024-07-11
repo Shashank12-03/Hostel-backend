@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from .models import Complaints
+from .models import Complaints,Notices
 from rest_framework.views import APIView
-from .serializer import RegisterComplaintSerializer, StudentLeaveSerializer,ComplaintsSerializer
+from .serializer import RegisterComplaintSerializer, StudentLeaveSerializer,ComplaintsSerializer,NoticeSerializer,AddNoticeSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication 
 from registration.models import StudentProfile
@@ -80,3 +80,41 @@ class ViewComplaints(APIView):
         serializer = ComplaintsSerializer(complaints, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class CreateNoticeView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    
+    def post(self, request):
+        try:
+            hostel = HostelProfile.objects.get(email=request.user)  
+            serializer = AddNoticeSerializer(data=request.data)
+            
+            if serializer.is_valid():
+                notice = serializer.save(hostel=hostel)
+                return Response({'message': 'Notice created'}, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                
+        except HostelProfile.DoesNotExist:
+            return Response({'detail': 'Hostel profile not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+        
+        
+
+class NoticeView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    
+    def get(self,request):
+        
+        try :
+            student = StudentProfile.objects.get(email = request.user)
+            hostel = student.get_hostel()
+            notice = Notices.objects.filter(hostel=hostel)
+            serializer = NoticeSerializer(notice,many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except StudentProfile.DoesNotExist:
+            return Response({'detail': 'Student profile not found.'}, status=status.HTTP_404_NOT_FOUND)
+        

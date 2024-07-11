@@ -88,5 +88,9 @@ class LeaveRecord(models.Model):
     def __str__(self):
         return f"{self.student.name} - {self.leave_start_date} to {self.leave_end_date}"
     
+
+    
 class OutstandingToken(models.Model):
     user = models.ForeignKey(CustomUserModel, on_delete=models.CASCADE, related_name='custom_outstanding_tokens',default= None)
+    
+    
